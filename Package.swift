@@ -4,7 +4,7 @@
 import PackageDescription
 
 extension String {
-    static let utils: Self = "Utils"
+    static let utils: Self = "CoenttbUtils"
     static let arrayBuilder: Self = "ArrayBuilder"
 }
 
