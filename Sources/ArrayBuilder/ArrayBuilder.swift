@@ -1,57 +1,59 @@
-//
-//  File.swift
-//  coenttb-utils
-//
-//  Created by Coen ten Thije Boonkkamp on 01/11/2024.
-//
-
 import Foundation
-
 
 @resultBuilder
 public struct ArrayBuilder<Element> {
-    // Basic building block - single element
-    public static func buildExpression(_ element: Element) -> [Element] {
-        [element]
+    // MARK: - Core Building Blocks
+    
+    public static func buildPartialBlock(first: Element) -> [Element] {
+        [first]
     }
     
-    // Basic building block - array
-    public static func buildExpression(_ elements: [Element]) -> [Element] {
-        elements
+    public static func buildPartialBlock(first: [Element]) -> [Element] {
+        first
     }
     
-    // Combine arrays from multiple statements
-    public static func buildBlock(_ components: [Element]...) -> [Element] {
-        components.flatMap { $0 }
+    public static func buildPartialBlock(accumulated: [Element], next: Element) -> [Element] {
+        accumulated + [next]
     }
     
-    // Handle if statement without else
-    public static func buildOptional(_ component: [Element]?) -> [Element] {
-        component ?? []
+    public static func buildPartialBlock(accumulated: [Element], next: [Element]) -> [Element] {
+        accumulated + next
     }
     
-    // Handle if/else statements
-    public static func buildEither(first component: [Element]) -> [Element] {
-        component
+    // MARK: - Control Flow
+    
+    public static func buildPartialBlock(first: Void) -> [Element] { [] }
+    
+    public static func buildPartialBlock(first: Never) -> [Element] {}
+    
+    public static func buildBlock() -> [Element] { [] }
+    
+    public static func buildIf(_ element: [Element]?) -> [Element] {
+        element ?? []
     }
     
-    public static func buildEither(second component: [Element]) -> [Element] {
-        component
+    public static func buildEither(first: [Element]) -> [Element] {
+        first
     }
     
-    // Handle availability conditions
-    public static func buildLimitedAvailability(_ component: [Element]) -> [Element] {
-        component
+    public static func buildEither(second: [Element]) -> [Element] {
+        second
     }
     
-    // Handle for/foreach loops
     public static func buildArray(_ components: [[Element]]) -> [Element] {
         components.flatMap { $0 }
     }
     
-    // Final result transformation if needed
+    // MARK: - Optional Performance Optimization
+    
+    // Optional: Capacity hint for better performance with known sizes
     public static func buildFinalResult(_ component: [Element]) -> [Element] {
         component
     }
 }
 
+public extension Array {
+    init(@ArrayBuilder<Element> _ builder: () -> [Element]) {
+        self = builder()
+    }
+}
