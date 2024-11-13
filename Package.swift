@@ -6,8 +6,7 @@ import CompilerPluginSupport
 extension String {
     static let utils: Self = "CoenttbUtils"
     static let arrayBuilder: Self = "ArrayBuilder"
-    static let coenttbMacros: Self = "CoenttbMacros"
-    static let coenttbMacrosImplementation: Self = "CoenttbMacrosImplementation"
+    
 }
 
 extension Target.Dependency {
@@ -18,7 +17,6 @@ extension Target.Dependency {
 
 extension Target.Dependency {
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
-    static var coenttbMacros: Self { .target(name: .coenttbMacros) }
 }
 
 extension [Target.Dependency] {
@@ -30,8 +28,7 @@ extension [Target.Dependency] {
 extension [Package.Dependency] {
     static var `default`: Self {
         [
-            .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.5"),
-            .package(url: "https://github.com/swiftlang/swift-syntax", "509.0.0"..<"601.0.0-prerelease"),
+            .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.5")
         ]
     }
 }
@@ -55,7 +52,7 @@ extension Package {
             products: [
                 .library(name: .utils, targets: [.utils]),
                 .library(name: .arrayBuilder, targets: [.arrayBuilder]),
-                .library(name: .coenttbMacros, targets: [.coenttbMacros])
+                
             ],
             dependencies: .default,
             targets: .targets(targets)
@@ -76,21 +73,7 @@ extension [Target] {
                     dependencies: [.init(stringLiteral: target.name)]
                 )
             ]
-        } + [
-            Target.macro(
-                name: .coenttbMacrosImplementation,
-                dependencies: [
-                    .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                    .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-                ]
-            ),
-            Target.target(
-                name: .coenttbMacros,
-                dependencies: [
-                    .target(name: .coenttbMacrosImplementation)
-                ]
-            )
-        ]
+        }
     }
 }
 
@@ -101,7 +84,6 @@ let package = Package.utils(
             library: true,
             dependencies: [
                 .arrayBuilder,
-                .coenttbMacros
             ]
         ),
         .init(
