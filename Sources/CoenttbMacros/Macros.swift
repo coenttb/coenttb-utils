@@ -15,7 +15,7 @@
     conformances: HasAnswerCases
 )
 public macro GenerateAnswerCases() = #externalMacro(
-    module: "CoenttbUIMacrosImplementation",
+    module: "CoenttbMacrosImplementation",
     type: "AnswerCasesMacro"
 )
 
@@ -30,6 +30,6 @@ public protocol HasAnswerCases {
     names: named(Answers), named(init(answers:))
 )
 public macro GenerateAnswerStruct() = #externalMacro(
-    module: "CoenttbUIMacrosImplementation",
+    module: "CoenttbMacrosImplementation",
     type: "AnswerStructMacro"
 )
