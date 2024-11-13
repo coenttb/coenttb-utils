@@ -2,52 +2,58 @@ import Foundation
 
 @resultBuilder
 public struct ArrayBuilder<Element> {
-    // MARK: - Core Building Blocks
+    // MARK: - Expression Building
     
-    public static func buildPartialBlock(first: Element) -> [Element] {
-        [first]
+    // This is key for type inference
+    public static func buildExpression(_ expression: Element) -> [Element] {
+        [expression]
     }
     
-    public static func buildPartialBlock(first: [Element]) -> [Element] {
-        first
+    // Support for array expressions
+    public static func buildExpression(_ expression: [Element]) -> [Element] {
+        expression
     }
     
-    public static func buildPartialBlock(accumulated: [Element], next: Element) -> [Element] {
-        accumulated + [next]
+    // MARK: - Block Building
+    
+    // Empty block
+    public static func buildBlock() -> [Element] {
+        []
     }
     
-    public static func buildPartialBlock(accumulated: [Element], next: [Element]) -> [Element] {
-        accumulated + next
+    // Single element block
+    public static func buildBlock(_ component: [Element]) -> [Element] {
+        component
+    }
+    
+    // Multiple element block
+    public static func buildBlock(_ components: [Element]...) -> [Element] {
+        components.flatMap { $0 }
     }
     
     // MARK: - Control Flow
     
-    public static func buildPartialBlock(first: Void) -> [Element] { [] }
-    
-    public static func buildPartialBlock(first: Never) -> [Element] {}
-    
-    public static func buildBlock() -> [Element] { [] }
-    
-    public static func buildIf(_ element: [Element]?) -> [Element] {
-        element ?? []
+    // Optional elements
+    public static func buildOptional(_ component: [Element]?) -> [Element] {
+        component ?? []
     }
     
-    public static func buildEither(first: [Element]) -> [Element] {
-        first
+    // Conditional elements
+    public static func buildEither(first component: [Element]) -> [Element] {
+        component
     }
     
-    public static func buildEither(second: [Element]) -> [Element] {
-        second
+    public static func buildEither(second component: [Element]) -> [Element] {
+        component
     }
     
+    // Arrays of elements
     public static func buildArray(_ components: [[Element]]) -> [Element] {
         components.flatMap { $0 }
     }
     
-    // MARK: - Optional Performance Optimization
-    
-    // Optional: Capacity hint for better performance with known sizes
-    public static func buildFinalResult(_ component: [Element]) -> [Element] {
+    // Limited element
+    public static func buildLimitedAvailability(_ component: [Element]) -> [Element] {
         component
     }
 }
