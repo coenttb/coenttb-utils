@@ -7,6 +7,8 @@
 
 import Foundation
 import BoundedCache
+import Dependencies
+
 
 /// A generic rate limiter that can be used for various rate limiting scenarios
 public actor RateLimiter<Key: Hashable & Sendable> {
@@ -85,7 +87,13 @@ public actor RateLimiter<Key: Hashable & Sendable> {
         self.metricsCallback = metricsCallback
     }
     
-    public func checkLimit(_ key: Key, timestamp: Date = Date()) async -> RateLimitResult {
+    public func checkLimit(
+        _ key: Key,
+        timestamp: Date = {
+            @Dependency(\.date) var date
+            return date()
+        }()
+    ) async -> RateLimitResult {
         await cleanup(before: timestamp)
         
         let infos = getCurrentWindows(key: key, timestamp: timestamp)
