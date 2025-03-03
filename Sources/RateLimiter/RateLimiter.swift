@@ -92,7 +92,7 @@ public actor RateLimiter<Key: Hashable & Sendable> {
         
         // Check each window's limits
         for (windowConfig, info) in zip(windows, infos) {
-            if info.attempts >= windowConfig.maxAttempts {
+            if info.attempts + 1 > windowConfig.maxAttempts {
                 let nextWindow = info.windowStart.addingTimeInterval(windowConfig.duration)
                 
                 let backoff = calculateBackoff(consecutiveFailures: info.consecutiveFailures)
