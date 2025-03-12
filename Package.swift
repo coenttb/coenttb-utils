@@ -63,8 +63,7 @@ let package = Package.utils(
             name: .rateLimiter,
             library: true,
             dependencies: [
-                .boundedCache,
-                .dependencies,
+                .boundedCache
             ]
         ),
     ]
